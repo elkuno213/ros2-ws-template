@@ -7,7 +7,7 @@
   "C_Cpp.intelliSenseEngine": "disabled",
   "clangd.path": "/usr/bin/clangd-16",
   "clangd.arguments": [
-    "--query-driver=/usr/bin/g++", // for cross compile usage
+    "--query-driver=/usr/bin/c++", // for cross compile usage
     "--compile-commands-dir=${workspaceFolder}/build",
     "--completion-style=detailed",
     "--clang-tidy",
