@@ -1,0 +1,91 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    // Source setup script and print environment variables to .env file.
+    {
+      "label": "source-ws",
+      "detail": "Sources the current workspace with zsh shell",
+      "type": "shell",
+      "command": "source ${workspaceFolder}/install/local_setup.zsh && printenv > ${workspaceFolder}/.env",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$gcc",
+      // Hide the panel that shows the executed command and its output
+      "presentation": {
+        "reveal": "silent",
+        "revealProblems": "onProblem",
+        "close": true
+      }
+    },
+    // colcon build a package in debug mode.
+    {
+      "label": "colcon-build-debug",
+      "detail": "Build a package in debug mode",
+      "type": "shell",
+      "command": "colcon build --symlink-install --packages-select ${input:pkg-name} --cmake-args -G Ninja -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_BUILD_TYPE=Debug",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$gcc",
+      "presentation": {
+        "focus": true
+      },
+    },
+    // colcon build a package in release mode
+    {
+      "label": "colcon-build-release",
+      "detail": "Build a package in release mode",
+      "type": "shell",
+      "command": "colcon build --build-base build-release --install-base install-release --symlink-install --packages-select ${input:pkg-name} --cmake-args -G Ninja -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_BUILD_TYPE=Release",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$gcc",
+      "presentation": {
+        "focus": true
+      }
+    },
+    // clean a package in debug directories.
+    {
+      "label": "colcon-clean-debug",
+      "detail": "Clean a package in debug directories",
+      "type": "shell",
+      "command": "rm -rf build/${input:pkg-name} install/${input:pkg-name}",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$gcc",
+      "presentation": {
+        "reveal": "never"
+      }
+    },
+    // clean a package in release directories.
+    {
+      "label": "colcon-clean-release",
+      "detail": "Clean a package in release directories",
+      "type": "shell",
+      "command": "rm -rf build-release/${input:pkg-name} install-release/${input:pkg-name}",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$gcc",
+      "presentation": {
+        "reveal": "never"
+      }
+    },
+  ],
+  "inputs": [
+    {
+      "id": "pkg-name",
+      "type": "promptString",
+      "description": "Enter the package name to build",
+      "default": ""
+    }
+  ]
+}

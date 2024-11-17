@@ -1,0 +1,16 @@
+{
+  "configurations": [
+    {
+      "name": "ROS2",
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "intelliSenseMode": "linux-gcc-x64",
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+      "compilerPath": "/usr/bin/c++",
+      "cppStandard": "c++17"
+    }
+  ],
+  "version": 4
+}

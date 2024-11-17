@@ -1,0 +1,52 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ROS2 Launch (Multiple Nodes)",
+      "type": "ros",
+      "request": "launch",
+      "target": "${file}",
+      "launch": [],
+      "attachDebugger": []
+    },
+    {
+      "name": "(gdb) ROS2 C++ Node",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/<pkg-name>/<node-name>",
+      "args": [],
+      "stopAtEntry": true,
+      "preLaunchTask": "source-ws",
+      "envFile": "${workspaceFolder}/.env",
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "ROS2 Python Node",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "preLaunchTask": "source-ws",
+      "envFile": "${workspaceFolder}/.env",
+      "stopOnEntry": true
+    },
+    {
+      "name": "ROS2 Python Launch File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "stopOnEntry": true
+    }
+  ]
+}

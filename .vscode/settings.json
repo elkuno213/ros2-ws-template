@@ -1,0 +1,55 @@
+{
+  // shell
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  // cmake
+  "cmake.configureOnOpen": false,
+  // clangd
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "clangd.path": "/usr/bin/clangd-16",
+  "clangd.arguments": [
+    "--query-driver=/usr/bin/g++", // for cross compile usage
+    "--compile-commands-dir=${workspaceFolder}/build",
+    "--completion-style=detailed",
+    "--clang-tidy",
+    "--clang-tidy-checks=-*,modernize*",
+    "--header-insertion=never",
+    "--pretty"
+  ],
+  // clang-format
+  "[cpp]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
+  "clang-format.executable": "/usr/bin/clang-format-16",
+  "clang-format.style": "file:${containerWorkspaceFolder}/.clang-format:",
+  "clang-format.fallbackStyle": "Google",
+  // python
+  "python.defaultInterpreterPath": "/usr/bin/python3",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8",
+    "editor.formatOnType": true,
+    "editor.tabSize": 2
+  },
+  // autopep8
+  "autopep8.args": [
+    "--experimental",
+    "--indent-size=2",
+    "--max-line-length=80"
+  ],
+  "autopep8.interpreter": [
+    "/usr/bin/python3",
+  ],
+  // pylance (python autocompletion)
+  "python.autoComplete.extraPaths": [
+    "/opt/ros/humble/lib/python3.10/site-packages"
+  ],
+  "python.analysis.extraPaths": [
+    "/opt/ros/humble/lib/python3.10/site-packages"
+  ],
+  // ros2
+  "ros.distro": "humble",
+  // This option does not currently work with the ROS extension. This extension
+  // forces to source "${workspaceFolder}/install/setup.bash" by default. Every
+  // time the following option is changed, the defaulted sourcing is applied.
+  // Thus, the install directory must be `install` in debug mode.
+  "ros.rosSetupScript": "${workspaceFolder}/install/local_setup.zsh",
+}
