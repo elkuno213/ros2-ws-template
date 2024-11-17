@@ -62,7 +62,7 @@ The `ros2-novnc` container provides GUI access via noVNC. Access it in your brow
 ## VSCode Configuration
 
 - `settings.json`: ROS2-related settings for CMake, Clang-Format, Python, and more.
-- `c_cpp_properties.json`: Configures C++ linting with ms-vscode.cpptools.
+- `c_cpp_properties.json`: Configures C++ linting with [ms-vscode.cpptools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools).
 - `tasks.json`: Predefined build commands using colcon.
 - `launch.json`: Debug configurations for:
   - ROS2 C++ node.
