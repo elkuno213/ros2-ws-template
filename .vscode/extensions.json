@@ -2,21 +2,15 @@
   "recommendations": [
     // C++
     "ms-vscode.cpptools-extension-pack",
-    "xaver.clang-format",
-    "llvm-vs-code-extensions.vscode-clangd",
+    "KylinIdeTeam.kylin-clangd",
     // Python
     "donjayamanne.python-extension-pack",
-    "ms-python.autopep8",
+    "charliermarsh.ruff",
     // ROS
     "ms-iot.vscode-ros",
     // Other features
     "GitHub.copilot",
     "Gruntfuggly.todo-tree",
     "redhat.vscode-xml"
-  ],
-  "unwantedRecommendations": [
-    "ms-vscode.cpptools-themes",
-    "wholroyd.jinja",
-    "batisteo.vscode-django"
   ]
 }
