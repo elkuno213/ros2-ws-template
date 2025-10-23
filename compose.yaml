@@ -1,17 +1,15 @@
 services:
   ros2:
     container_name: ros2
+    image: elkuno213/ros2:latest
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - USERNAME
-        - UID
-        - GID
     volumes:
-      - ./:/workspaces/ros2
-      - $HOME/data:/data
+      - ./:/workspaces/ros2-ws
+      - $SSH_AUTH_SOCK:/ssh-agent
     environment:
+      - SSH_AUTH_SOCK=/ssh-agent
       - DISPLAY=ros2-novnc:0.0
     networks:
       - ros2-network

@@ -1,69 +1,81 @@
 FROM osrf/ros:humble-desktop-full
 
 # Install dependencies
-RUN apt-get update                  \
-    && apt-get install -y           \
-      sudo                          \
-      ninja-build                   \
-      rsync                         \
-      gdb                           \
-      gdbserver                     \
-    && apt-get autoremove -y        \
-    && apt-get clean -y             \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update                \
+  && apt-get install -y           \
+  sudo                            \
+  wget                            \
+  ninja-build                     \
+  rsync                           \
+  gdb                             \
+  gdbserver                       \
+  && apt-get autoremove -y        \
+  && apt-get clean -y             \
+  && rm -rf /var/lib/apt/lists/*
 
-# Install llvm 16
-RUN git clone https://gist.github.com/96573409aee8d12951337621ef07b027.git /tmp/install-llvm \
-    && chmod +x /tmp/install-llvm/install.sh                                                 \
-    && /tmp/install-llvm/install.sh 16                                                       \
-    && rm -rf /tmp/install-llvm
+# Install gcc 13
+RUN apt update                                                                                     \
+  && apt install software-properties-common -y                                                     \
+  && add-apt-repository ppa:ubuntu-toolchain-r/test -y                                             \
+  && apt update                                                                                    \
+  && apt install gcc-13 g++-13 -y                                                                  \
+  && update-alternatives                                                                           \
+  --install /usr/bin/gcc gcc /usr/bin/gcc-13 13                                                    \
+  --slave   /usr/bin/g++ g++ /usr/bin/g++-13                                                       \
+  && gcc --version # check version                                                                 \
+  && g++ --version # check version                                                                 \
+  && add-apt-repository --remove ppa:ubuntu-toolchain-r/test -y                                    \
+  && apt update                                                                                    \
+  && apt autoremove -y                                                                             \
+  && apt clean -y                                                                                  \
+  && rm -rf /var/lib/apt/lists/*
 
-# Arguments.
-ARG USERNAME=nonroot
-ARG UID=1000
-ARG GID=1000
-
-# Environment variables.
-ENV USERNAME=$USERNAME
-ENV UID=$UID
-ENV GID=$GID
-
-# Create the user.
-RUN groupadd --gid $GID $USERNAME \
-    && adduser                    \
-      --disabled-password         \
-      --disabled-login            \
-      --gecos ""                  \
-      --uid $UID                  \
-      --gid $GID                  \
-      $USERNAME                   \
-    && usermod -aG sudo $USERNAME \
-    && groups $USERNAME           \
-    && echo "$USERNAME ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/$USERNAME
-
-# Create /workspaces folder owned by nonroot.
-RUN mkdir /workspaces && chown $USERNAME:$USERNAME /workspaces
-VOLUME /workspaces
-WORKDIR /workspaces
-
-# Set the default user.
-USER $USERNAME
+# Install clang 22
+RUN  apt install -y wget                                                                           \
+  && wget -qO /etc/apt/trusted.gpg.d/apt.llvm.org.asc https://apt.llvm.org/llvm-snapshot.gpg.key   \
+  && echo "deb http://apt.llvm.org/$(lsb_release -sc)/ llvm-toolchain-$(lsb_release -sc) main" | tee /etc/apt/sources.list.d/apt.llvm.org.list \
+  && apt update                                                                                    \
+  && apt-get install clangd-22 clang-format-22 clang-tidy-22 -y                                    \
+  && update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-22 100 \
+  && update-alternatives --install /usr/bin/clangd       clangd       /usr/bin/clangd-22       100 \
+  && update-alternatives --install /usr/bin/clang-tidy   clang-tidy   /usr/bin/clang-tidy-22   100 \
+  && clang-format --version # check version                                                        \
+  && clangd       --version # check version                                                        \
+  && clang-tidy   --version # check version                                                        \
+  && apt autoremove -y                                                                             \
+  && apt clean -y                                                                                  \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install Zsh and Oh My Zsh.
-RUN git clone https://gist.github.com/fe0d401310134bb6012beb3627c367ee.git /tmp/install-zsh \
-    && sudo chmod +x /tmp/install-zsh/install.sh                                            \
-    && /tmp/install-zsh/install.sh                                                          \
-    && sudo rm -rf /tmp/install-zsh
+RUN apt-get install -y wget                                                                        \
+  && sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.2.1/zsh-in-docker.sh)" -- \
+  -t gnzh                                                                                          \
+  -p git                                                                                           \
+  -p https://github.com/zsh-users/zsh-autosuggestions                                              \
+  -p https://github.com/zsh-users/zsh-completions                                                  \
+  -p https://github.com/zsh-users/zsh-syntax-highlighting                                          \
+  && chsh -s $(which zsh) $USERNAME                                                                \
+  && zsh --version # check version                                                                 \
+  && apt-get autoremove -y                                                                         \
+  && apt-get clean -y                                                                              \
+  && rm -rf /var/lib/apt/lists/*
 
 # Add ROS underlay packages and auto-completion.
-RUN echo "\n# ROS" >> $HOME/.bashrc                                                                \
-    && echo "source /opt/ros/humble/setup.bash" >> $HOME/.bashrc                                   \
-    && echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash\n" >> $HOME/.bashrc \
-    && echo "\n# ROS" >> $HOME/.zshrc                                                              \
-    && echo "source /opt/ros/humble/setup.zsh" >> $HOME/.zshrc                                     \
-    && echo 'eval "$(register-python-argcomplete3 ros2)"' >> $HOME/.zshrc                          \
-    && echo 'eval "$(register-python-argcomplete3 colcon)"' >> $HOME/.zshrc                        \
-    && rosdep update
+RUN echo "\n# ROS"                                        >> $HOME/.bashrc                         \
+  && echo "source /opt/ros/humble/setup.bash"             >> $HOME/.bashrc                         \
+  && echo 'eval "$(register-python-argcomplete3 ros2)"'   >> $HOME/.bashrc                         \
+  && echo 'eval "$(register-python-argcomplete3 colcon)"' >> $HOME/.bashrc                         \
+  && echo "export RCUTILS_COLORIZED_OUTPUT=1"             >> $HOME/.bashrc                         \
+  && echo "\n# ROS"                                       >> $HOME/.zshrc                          \
+  && echo "source /opt/ros/humble/setup.zsh"              >> $HOME/.zshrc                          \
+  && echo 'eval "$(register-python-argcomplete3 ros2)"'   >> $HOME/.zshrc                          \
+  && echo 'eval "$(register-python-argcomplete3 colcon)"' >> $HOME/.zshrc                          \
+  && echo "export RCUTILS_COLORIZED_OUTPUT=1"             >> $HOME/.zshrc                          \
+  && rosdep update
+
+RUN     mkdir /workspaces
+VOLUME  /workspaces
+WORKDIR /workspaces
 
 # Start zsh shell when the container starts
 ENTRYPOINT [ "zsh" ]
