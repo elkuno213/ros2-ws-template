@@ -1,6 +1,6 @@
-# ROS2 Development Environment with Docker and VSCode Remote Explorer
+# ROS2 Development Environment with Docker and VSCode Dev Container
 
-This repository sets up a Docker-based development environment for ROS2 (Humble), enabling you to code, build, and debug ROS2 projects using VSCode Remote Explorer. It includes a multi-container setup with a noVNC GUI container to forward the graphical output from the ROS2 container.
+This repository sets up a Docker-based development environment for ROS2 (Humble), enabling you to code, build, and debug ROS2 projects using VSCode Dev Container. It includes a multi-container setup with a noVNC GUI container to forward the graphical output from the ROS2 container.
 
 ## Features
 
@@ -16,7 +16,7 @@ This repository sets up a Docker-based development environment for ROS2 (Humble)
 
 1. Install Docker.
 2. Install VSCode.
-3. Install the VSCode Remote Explorer extension.
+3. Install the VSCode Dev Container extension.
 
 ### Repository Structure
 
@@ -28,7 +28,6 @@ This repository sets up a Docker-based development environment for ROS2 (Humble)
 ├── .clang-format
 ├── .gitignore
 └── .vscode
-    ├── c_cpp_properties.json
     ├── extensions.json
     ├── launch.json
     ├── settings.json
@@ -47,13 +46,10 @@ cd ros2-ws-template
 2. Build and launch the containers:
 
 ```bash
-env USERNAME=nonroot UID=$(id -u) GID=$(id -g) docker compose up -d
+docker compose up -d
 ```
 
-- `USERNAME`: Non-root username inside the container.
-- `UID`/`GID`: Ensures correct file permissions between the host and container.
-
-3. Open VSCode and connect to the `ros2` container using the Remote Explorer extension.
+3. Open VSCode and connect/attach to the `ros2` container using the Dev Container extension.
 
 ### Accessing the GUI
 
@@ -62,7 +58,6 @@ The `ros2-novnc` container provides GUI access via noVNC. Access it in your brow
 ## VSCode Configuration
 
 - `settings.json`: ROS2-related settings for CMake, Clang-Format, Python, and more.
-- `c_cpp_properties.json`: Configures C++ linting with [ms-vscode.cpptools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools).
 - `tasks.json`: Predefined build commands using colcon.
 - `launch.json`: Debug configurations for:
   - ROS2 C++ node.
@@ -73,8 +68,8 @@ The `ros2-novnc` container provides GUI access via noVNC. Access it in your brow
 ## Development Workflow
 
 1. Open the project folder in VSCode.
-2. Connect to the `ros2` container via the Remote Explorer extension.
-3. Go to `/workspaces/ros2` and build your packages by commands or tasks.
+2. Connect to the `ros2` container via the Dev Container extension.
+3. Go to `/workspaces/ros2-ws` and build your packages by commands or tasks.
 4. If debugging, use the corresponding configuration in `.vscode/launch.json`.
 
 
