@@ -1,0 +1,28 @@
+{
+  "name": "ROS2 Humble Workspace",
+  "dockerComposeFile": "../compose.yaml",
+  "service": "ros2",
+  "workspaceFolder": "/workspaces/ros2-ws",
+  "shutdownAction": "none",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.cpptools",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "charliermarsh.ruff",
+        "ms-iot.vscode-ros",
+        "redhat.vscode-xml",
+        "github.copilot",
+        "gruntfuggly.todo-tree"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "clangd.path": "/usr/bin/clangd",
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "ros.distro": "humble"
+      }
+    }
+  }
+}

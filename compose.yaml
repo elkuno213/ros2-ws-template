@@ -1,31 +1,30 @@
 services:
   ros2:
     container_name: ros2
-    image: elkuno213/ros2:latest
+    image: elkuno213/ros2-humble-dev:local
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./:/workspaces/ros2-ws
+      - .:/workspaces/ros2-ws
     environment:
-      - DISPLAY=ros2-novnc:0.0
+      DISPLAY: ros2-novnc:0.0
+      RCUTILS_COLORIZED_OUTPUT: "1"
     networks:
       - ros2-network
+    stdin_open: true
     tty: true
-    devices:
-      - /dev/video0:/dev/video0
-      - /dev/video1:/dev/video1
 
   ros2-novnc:
     container_name: ros2-novnc
-    image: "theasp/novnc:latest"
+    image: theasp/novnc:latest
     environment:
-      - DISPLAY_WIDTH=1800
-      - DISPLAY_HEIGHT=1012
-      - RUN_XTERM=no
-      - RUN_FLUXBOX=yes
+      DISPLAY_WIDTH: "1800"
+      DISPLAY_HEIGHT: "1012"
+      RUN_XTERM: "no"
+      RUN_FLUXBOX: "yes"
     ports:
-      - "8080:8080" # http://localhost:8080/vnc.html
+      - "${NOVNC_PORT:-8080}:8080"
     networks:
       - ros2-network
 

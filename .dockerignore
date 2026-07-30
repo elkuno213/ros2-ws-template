@@ -1,0 +1,12 @@
+.git/
+.github/
+.superpowers/
+.vscode/
+build/
+install/
+log/
+docs/
+frames_*
+*.debug.py
+*__pycache__*
+.env
