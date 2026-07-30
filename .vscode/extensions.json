@@ -1,16 +1,13 @@
 {
   "recommendations": [
-    // C++
-    "ms-vscode.cpptools-extension-pack",
     "KylinIdeTeam.kylin-clangd",
-    // Python
-    "donjayamanne.python-extension-pack",
+    "ms-vscode.cpptools",
+    "ms-python.python",
+    "ms-python.debugpy",
     "charliermarsh.ruff",
-    // ROS
     "ms-iot.vscode-ros",
-    // Other features
-    "GitHub.copilot",
-    "Gruntfuggly.todo-tree",
-    "redhat.vscode-xml"
+    "redhat.vscode-xml",
+    "github.copilot",
+    "gruntfuggly.todo-tree"
   ]
 }

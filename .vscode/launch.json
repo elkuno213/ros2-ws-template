@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "ROS2 Launch (Multiple Nodes)",
+      "name": "ROS2 Launch (Current File)",
       "type": "ros",
       "request": "launch",
       "target": "${file}",
