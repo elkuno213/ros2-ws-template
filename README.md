@@ -1,100 +1,202 @@
-# ROS2 Development Environment with Docker and VSCode Dev Container
+# ROS2 Workspace Template
 
-This repository sets up a Docker-based development environment for ROS2 (Humble), enabling you to code, build, and debug ROS2 projects using VSCode Dev Container. It includes a multi-container setup with a noVNC GUI container to forward the graphical output from the ROS2 container.
+Compose-first ROS2 Humble workspace for C++ and Python robotics development. The
+template is built around a Docker Compose container, VS Code attach workflow,
+browser GUI access through noVNC, and repeatable `colcon` validation.
 
-## Features
+## Contents
 
-- Dockerized ROS2 Humble Environment based on [osrf/ros:humble-desktop-full](https://hub.docker.com/layers/osrf/ros/humble-desktop-full/images/sha256-71ae08a6a0aae71a2f981e066c8a1d7dd76e956abf419c04626a0c746c3ebf4f).
-- Pre-configured VSCode Integration: C++/Python linting, shell, and debugging configurations for ROS2 development.
-- Multi-Container Setup:
-  - `ros2` container: Primary container for development.
-  - `ros2-novnc` container: Provides GUI forwarding using noVNC.
+- ROS2 Humble desktop development image.
+- Stable container workspace path: `/workspaces/ros2-ws`.
+- VS Code attach workflow, with optional Dev Containers wrapper.
+- noVNC browser access for GUI tools.
+- C++ `rclcpp` example package with GoogleTest and clang-tidy checks.
+- Python `rclpy` example package with a flat structure and pytest checks.
+- clangd, clang-format, clang-tidy, and VS Code task configuration.
+- GitHub Actions smoke workflow for image build, rosdep, colcon build, and tests.
 
-## Getting Started
+## Prerequisites
 
-### Prerequisites
+- Docker with Docker Compose v2.
+- VS Code.
+- VS Code Remote Development or Dev Containers extension.
 
-1. Install Docker.
-2. Install VSCode.
-3. Install the VSCode Dev Container extension.
-
-### Repository Structure
-
-```bash
-.
-├── README.md
-├── Dockerfile                # Dockerfile for `ros2` container
-├── compose.yaml              # Multi-container setup
-├── .clang-format
-├── .gitignore
-└── .vscode
-    ├── extensions.json
-    ├── launch.json
-    ├── settings.json
-    └── tasks.json
-```
-
-### Setting Up the Environment
-
-1. Clone this reposity:
+## Quickstart
 
 ```bash
 git clone https://github.com/elkuno213/ros2-ws-template.git
 cd ros2-ws-template
+docker compose up -d --build --remove-orphans
 ```
 
-2. Build and launch the containers:
+Open a shell in the ROS2 container:
 
 ```bash
-docker compose up -d
+docker compose exec ros2 zsh -l
 ```
 
-3. Open VSCode and connect/attach to the `ros2` container using the Dev Container extension.
+Build and test inside the container:
 
-### Accessing the GUI
-
-The `ros2-novnc` container provides GUI access via noVNC. Access it in your browser at http://localhost:8080.
-
-## VSCode Configuration
-
-- `settings.json`: ROS2-related settings for CMake, Clang-Format, Python, and more.
-- `tasks.json`: Predefined build commands using colcon.
-- `launch.json`: Debug configurations for:
-  - ROS2 C++ node.
-  - ROS2 Python node.
-  - ROS2 Launch of multiple nodes.
-  - ROS2 Python launch file.
-
-## Development Workflow
-
-1. Open the project folder in VSCode.
-2. Connect to the `ros2` container via the Dev Container extension.
-3. Go to `/workspaces/ros2-ws` and build your packages by commands or tasks.
-4. If debugging, use the corresponding configuration in `.vscode/launch.json`.
-
-
-## FAQ
-
-### How to debug Python launch file?
-
-Create a temporary file `<launch-file>.debug.py` alongside the origin to debug:
-
-```python
-from .<launch-file> import generate_launch_description
-from launch import LaunchService
-
-
-def main():
-  ls = LaunchService()
-  ld = generate_launch_description()
-  ls.include_launch_description(ld)
-  return ls.run()
-
-
-if __name__ == '__main__':
-  main()
+```bash
+cd /workspaces/ros2-ws
+source /opt/ros/humble/setup.zsh
+rosdep update
+rosdep install --from-paths src --ignore-src -r -y
+colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -GNinja
+colcon test
+colcon test-result --all --verbose
 ```
 
-## Contribution
+## VS Code Workflow
 
-If you have any questions, suggestions, or encounter any issues, feel free to create an issue in the repository. I welcome your feedback and contributions to improve this project!
+Primary workflow:
+
+1. Start the stack with `docker compose up -d --build --remove-orphans`.
+2. Open this repository in VS Code.
+3. Run **Dev Containers: Attach to Running Container**.
+4. Select the `ros2` container.
+5. Open `/workspaces/ros2-ws` as the workspace folder inside the container.
+
+`.devcontainer/devcontainer.json` is only a convenience wrapper over
+`compose.yaml`. Keep Compose as the runtime source of truth.
+
+## GUI Access
+
+noVNC is exposed on host port `8080` by default:
+
+```text
+http://localhost:8080/vnc.html
+```
+
+The ROS2 container uses:
+
+```text
+DISPLAY=ros2-novnc:0.0
+```
+
+Use RViz or other GUI tools from inside the `ros2` container after the stack is
+running.
+
+To choose a different host port, set `NOVNC_PORT`:
+
+```bash
+NOVNC_PORT=6080 docker compose up -d --build --remove-orphans
+```
+
+## Optional Camera Devices
+
+`compose.devices.yaml` is not required for the current example packages. It is
+an optional override for machines that have local camera devices and need to pass
+them into the ROS2 container.
+
+Use it only when `/dev/video0` and `/dev/video1` exist:
+
+```bash
+docker compose -f compose.yaml -f compose.devices.yaml up -d --remove-orphans
+```
+
+The default `compose.yaml` intentionally avoids device mounts so clean clones work
+on machines without cameras.
+
+## Example Packages
+
+### `example_cpp_pubsub`
+
+C++ package:
+
+- publishes `sensor_msgs/msg/Temperature` on `example/temperature`;
+- keeps formatting logic in a small pure C++ function;
+- tests pure logic with GoogleTest;
+- runs ament lint checks including clang-tidy.
+
+Run after build:
+
+```bash
+source install/setup.zsh
+ros2 run example_cpp_pubsub temperature_publisher
+```
+
+### `example_py_tools`
+
+Python package:
+
+- keeps the example intentionally flat;
+- defines pure temperature formatting in `temperature_format.py`;
+- defines the ROS2 subscriber node in `temperature_reporter_node.py`;
+- tests pure formatting with pytest.
+
+Run after build:
+
+```bash
+source install/setup.zsh
+ros2 run example_py_tools temperature_reporter
+```
+
+## Tooling
+
+- `.clang-format` defines C++ formatting.
+- `.clang-tidy` defines C++ diagnostics and naming checks.
+- `.clangd` and VS Code point clangd at `build/compile_commands.json`.
+- `.vscode/tasks.json` provides build, test, and clean tasks for the container
+  workspace.
+
+Generate compile commands before relying on clangd diagnostics:
+
+```bash
+colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -GNinja
+ln -sf example_cpp_pubsub/compile_commands.json build/compile_commands.json
+```
+
+Expected compile database:
+
+```text
+build/compile_commands.json
+```
+
+## Troubleshooting
+
+### noVNC is not reachable
+
+Check the service:
+
+```bash
+docker compose ps ros2-novnc
+```
+
+Open:
+
+```text
+http://localhost:8080/vnc.html
+```
+
+### Camera device mount fails
+
+Start without the optional override:
+
+```bash
+docker compose up -d --remove-orphans
+```
+
+Use `compose.devices.yaml` only on hosts where the listed `/dev/video*` devices
+exist.
+
+### clangd cannot find compile commands
+
+Build once inside the container:
+
+```bash
+colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -GNinja
+ln -sf example_cpp_pubsub/compile_commands.json build/compile_commands.json
+```
+
+Then confirm:
+
+```bash
+test -f build/compile_commands.json
+```
+
+## Limitations
+
+- No Jetson, CUDA, or simulation image variant.
+- noVNC is for development convenience, not production GUI serving.
+- Example packages demonstrate workflow and structure, not robotics algorithms.
