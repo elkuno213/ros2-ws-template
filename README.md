@@ -60,6 +60,22 @@ Primary workflow:
 `.devcontainer/devcontainer.json` is only a convenience wrapper over
 `compose.yaml`. Keep Compose as the runtime source of truth.
 
+## VS Code Debugging
+
+The tracked VS Code tasks and launch configs are intended to run after attaching
+VS Code to the `ros2` container.
+
+For C++ nodes, run the `colcon-build-debug` task, enter the package name, update
+the `<pkg-name>/<node-name>` placeholders in the `(gdb) ROS2 C++ Node` launch
+configuration, then start the debugger.
+
+For Python nodes, open the node file and start the `ROS2 Python Node` launch
+configuration. The `source-ws` task writes `.env` from the sourced ROS2
+environment before the debugger starts.
+
+For ROS2 launch files, open the launch file and use the `ROS2 Launch (Current
+File)` launch configuration from the VS Code ROS extension.
+
 ## GUI Access
 
 noVNC is exposed on host port `8080` by default:
