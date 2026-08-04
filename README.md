@@ -11,8 +11,9 @@ browser GUI access through noVNC, and repeatable `colcon` validation.
 - VS Code attach workflow, with optional Dev Containers wrapper.
 - noVNC browser access for GUI tools.
 - C++ `rclcpp` example package with GoogleTest and clang-tidy checks.
-- Python `rclpy` example package with a flat structure and pytest checks.
-- clangd, clang-format, clang-tidy, and VS Code task configuration.
+- Python `rclpy` example package with a flat structure, pytest, and Ruff checks.
+- clangd, clang-format, clang-tidy, Ruff, uv, and VS Code task
+  configuration.
 - GitHub Actions smoke workflow for image build, rosdep, colcon build, and tests.
 
 ## Prerequisites
@@ -154,8 +155,13 @@ ros2 run example_py_pubsub temperature_subscriber
 - `.clang-format` defines C++ formatting.
 - `.clang-tidy` defines C++ diagnostics and naming checks.
 - `.clangd` and VS Code point clangd at `build/compile_commands.json`.
+- `pyproject.toml` defines Python Ruff configuration.
+- Docker installs Ruff as a uv-managed user tool for the `ros` user.
 - `.vscode/tasks.json` provides build, test, and clean tasks for the container
   workspace.
+
+The Docker image installs `uv`, then uses `uv tool install` to make `ruff`
+available on `PATH`. The workspace does not need a project `.venv` for tooling.
 
 Generate compile commands before relying on clangd diagnostics:
 
@@ -197,6 +203,21 @@ docker compose up -d --remove-orphans
 Use `compose.devices.yaml` only on hosts where the listed `/dev/video*` devices
 exist.
 
+### Python tools are missing
+
+Confirm the tools are available inside the `ros2` container:
+
+```bash
+uv --version
+ruff --version
+```
+
+If `ruff` is missing, rebuild and recreate the ROS2 service:
+
+```bash
+docker compose up -d --build --remove-orphans
+```
+
 ### clangd cannot find compile commands
 
 Build once inside the container:
@@ -211,6 +232,11 @@ Then confirm:
 ```bash
 test -f build/compile_commands.json
 ```
+
+## Future Work
+
+- TODO: Investigate the `Ranch-Hand-Robotics.rde-pack` VS Code extension for
+  future editor setup improvements.
 
 ## Limitations
 
