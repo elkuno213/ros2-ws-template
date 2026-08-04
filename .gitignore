@@ -1,7 +1,9 @@
 build/
 install/
 log/
+.venv/
 *__pycache__*
+*.egg-info/
 frames_*
 .env
 *.debug.py

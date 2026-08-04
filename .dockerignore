@@ -5,6 +5,7 @@
 build/
 install/
 log/
+.venv/
 docs/
 frames_*
 *.debug.py

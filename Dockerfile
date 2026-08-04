@@ -13,6 +13,7 @@ ARG GCC_VERSION=13
 # ROS logs stay readable in compose exec shells and CI logs.
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RCUTILS_COLORIZED_OUTPUT=1
+ENV PATH=/home/${USERNAME}/.local/bin:${PATH}
 
 # Base development tools shared by C++, Python, ROS2, and editor workflows.
 RUN apt-get update                                                                                 \
@@ -69,8 +70,7 @@ RUN install -d -m 0755 /etc/apt/keyrings                                        
         --install /usr/bin/clangd clangd /usr/bin/clangd-${LLVM_VERSION} 100                       \
     && rm -rf /var/lib/apt/lists/*
 
-# Create the default non-root ROS user. The entrypoint can later remap this
-# UID/GID to match the mounted workspace owner.
+# Create the default non-root ROS user for compose and VS Code sessions.
 RUN groupadd --gid ${USER_GID} ${USERNAME}                                                         \
     && useradd --uid ${USER_UID} --gid ${USER_GID} -m -s /usr/bin/zsh ${USERNAME}                  \
     && echo "${USERNAME} ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME}                     \
@@ -139,8 +139,14 @@ RUN rosdep update
 RUN mkdir -p /workspaces/ros2-ws                                                                   \
     && chown -R ${USERNAME}:${USERNAME} /workspaces
 
-# The entrypoint fixes workspace/home ownership after the project is bind
-# mounted, then runs the requested shell or command as the ros user.
+# uv is pinned in the image and installs Python CLI tools outside the workspace.
+COPY --from=ghcr.io/astral-sh/uv:0.12.0 /uv /uvx /usr/local/bin/
+
+# Ruff is a developer CLI tool, so keep it out of ROS and project Python paths.
+RUN gosu ${USERNAME} env HOME=/home/${USERNAME} \
+        uv tool install --python /usr/bin/python3 ruff
+
+# The entrypoint runs the requested shell or command.
 COPY scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 0755 /usr/local/bin/entrypoint.sh
 

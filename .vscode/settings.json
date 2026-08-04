@@ -15,18 +15,30 @@
   ],
   "python.defaultInterpreterPath": "/usr/bin/python3",
   "python.autoComplete.extraPaths": [
-    "/opt/ros/humble/lib/python3.10/site-packages"
+    "/opt/ros/humble/lib/python3.10/site-packages",
+    "${workspaceFolder}/src"
   ],
+  "python.analysis.extraPaths": [
+    "/opt/ros/humble/lib/python3.10/site-packages",
+    "${workspaceFolder}/src"
+  ],
+  "ruff.path": [
+    "${env:HOME}/.local/bin/ruff"
+  ],
+  "ruff.importStrategy": "fromEnvironment",
+  "ruff.configuration": "${workspaceFolder}/pyproject.toml",
   "ruff.nativeServer": "on",
-  "ruff.lineLength": 100,
-  "ruff.fixAll": true,
-  "ruff.organizeImports": true,
   "[python]": {
-    "editor.defaultFormatter": "charliermarsh.ruff"
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
   },
   "[cpp]": {
     "editor.defaultFormatter": "KylinIdeTeam.kylin-clangd"
   },
   "ros.distro": "humble",
-  "ros.rosSetupScript": "${workspaceFolder}/install/local_setup.zsh"
+  "ros.rosSetupScript": "${workspaceFolder}/install/local_setup.zsh",
+  "ROS2.distro": "humble"
 }

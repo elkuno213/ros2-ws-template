@@ -7,8 +7,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "llvm-vs-code-extensions.vscode-clangd",
-        "ms-vscode.cpptools",
+        "KylinIdeTeam.kylin-clangd",
         "ms-python.python",
         "ms-python.debugpy",
         "charliermarsh.ruff",
@@ -21,6 +20,9 @@
         "terminal.integrated.defaultProfile.linux": "zsh",
         "clangd.path": "/usr/bin/clangd",
         "python.defaultInterpreterPath": "/usr/bin/python3",
+        "ruff.path": ["${env:HOME}/.local/bin/ruff"],
+        "ruff.importStrategy": "fromEnvironment",
+        "ruff.configuration": "${containerWorkspaceFolder}/pyproject.toml",
         "ros.distro": "humble"
       }
     }

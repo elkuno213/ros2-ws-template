@@ -26,7 +26,10 @@ jobs:
         run: |
           docker compose run --rm ros2 bash -lc '
             set -eo pipefail
+            cd /workspaces/ros2-ws
             source /opt/ros/humble/setup.bash
+            ruff format --check .
+            ruff check .
             rosdep update
             rosdep install --from-paths src --ignore-src -r -y
             colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -GNinja

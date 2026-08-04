@@ -1,0 +1,57 @@
+[project]
+name = "ros2-ws-template"
+version = "0.1.0"
+description = "Compose-first ROS2 Humble workspace template."
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+dependencies = []
+
+[tool.ruff]
+line-length = 100
+src = ["src"]
+target-version = "py310"
+exclude = [
+  ".git",
+  ".ruff_cache",
+  ".venv",
+  "build",
+  "install",
+  "log",
+  "tmp",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint]
+select = [
+  "A",
+  "ANN",
+  "B",
+  "C4",
+  "D",
+  "E",
+  "F",
+  "I",
+  "N",
+  "PT",
+  "RUF",
+  "SIM",
+  "TCH",
+  "UP",
+  "W",
+]
+ignore = [
+  "COM812",
+  "D100",
+  "D104",
+  "D203",
+  "D213",
+  "ISC001",
+  "S101",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/*/setup.py" = ["D100"]

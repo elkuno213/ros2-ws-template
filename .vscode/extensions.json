@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "KylinIdeTeam.kylin-clangd",
-    "ms-vscode.cpptools",
     "ms-python.python",
     "ms-python.debugpy",
     "charliermarsh.ruff",
