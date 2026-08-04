@@ -1,12 +1,11 @@
 from setuptools import find_packages, setup
 
-package_name = "example_py_tools"
+package_name = "example_py_pubsub"
 
 setup(
     name=package_name,
     version="0.1.0",
     packages=find_packages(exclude=["test"]),
-    package_data={package_name: ["py.typed"]},
     data_files=[
         ("share/ament_index/resource_index/packages", [f"resource/{package_name}"]),
         (f"share/{package_name}", ["package.xml"]),
@@ -20,7 +19,7 @@ setup(
     extras_require={"test": ["pytest"]},
     entry_points={
         "console_scripts": [
-            "temperature_reporter = example_py_tools.main:main",
+            "temperature_subscriber = example_py_pubsub.temperature_subscriber:main",
         ],
     },
 )

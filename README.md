@@ -132,20 +132,21 @@ source install/setup.zsh
 ros2 run example_cpp_pubsub temperature_publisher
 ```
 
-### `example_py_tools`
+### `example_py_pubsub`
 
 Python package:
 
 - keeps the example intentionally flat;
-- defines pure temperature formatting in `temperature_format.py`;
-- defines the ROS2 subscriber node in `temperature_reporter_node.py`;
-- tests pure formatting with pytest.
+- defines the ROS2 subscriber node and entrypoint in `temperature_subscriber.py`;
+- keeps testable formatting helpers in `temperature.py`;
+- tests pure formatting with pytest;
+- is covered by repository-level Ruff checks.
 
 Run after build:
 
 ```bash
 source install/setup.zsh
-ros2 run example_py_tools temperature_reporter
+ros2 run example_py_pubsub temperature_subscriber
 ```
 
 ## Tooling

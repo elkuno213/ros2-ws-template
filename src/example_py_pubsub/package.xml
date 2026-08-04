@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>example_py_tools</name>
+  <name>example_py_pubsub</name>
   <version>0.1.0</version>
   <description>Minimal Python ROS2 subscriber example for the workspace template.</description>
   <maintainer email="elkuno213@example.com">elkuno213</maintainer>
@@ -12,8 +12,6 @@
   <depend>rclpy</depend>
   <depend>sensor_msgs</depend>
 
-  <test_depend>ament_flake8</test_depend>
-  <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
 
   <export>

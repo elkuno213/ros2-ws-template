@@ -1,8 +1,7 @@
 """Tests for pure temperature formatting logic."""
 
 import pytest
-
-from example_py_tools.temperature_format import TemperatureReading, format_temperature
+from example_py_pubsub.temperature import TemperatureReading, format_temperature
 
 
 @pytest.mark.parametrize(

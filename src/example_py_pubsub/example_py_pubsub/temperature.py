@@ -1,4 +1,4 @@
-"""Pure temperature formatting logic for the example package."""
+"""Temperature formatting helpers for the example package."""
 
 from dataclasses import dataclass
 
