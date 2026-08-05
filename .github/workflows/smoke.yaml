@@ -20,7 +20,11 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build ROS2 image
-        run: docker compose build ros2
+        run: |
+          docker compose build \
+            --build-arg USER_UID="$(id -u)" \
+            --build-arg USER_GID="$(id -g)" \
+            ros2
 
       - name: Build and test example packages
         run: |
