@@ -1,7 +1,8 @@
-build/
-install/
+build*/
+install*/
 log/
 .venv/
+.ruff_cache/
 *__pycache__*
 *.egg-info/
 frames_*
@@ -9,5 +10,6 @@ frames_*
 *.debug.py
 docs/
 .superpowers/
+tmp/
 
 .worktrees/

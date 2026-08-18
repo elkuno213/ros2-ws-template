@@ -5,7 +5,7 @@
       "label": "source-ws",
       "detail": "Source the current ROS2 workspace and write environment variables to .env",
       "type": "shell",
-      "command": "source /opt/ros/humble/setup.zsh && source ${workspaceFolder}/install/local_setup.zsh && printenv > ${workspaceFolder}/.env",
+      "command": "source /opt/ros/humble/setup.zsh && if [ -f ${workspaceFolder}/install/local_setup.zsh ]; then source ${workspaceFolder}/install/local_setup.zsh; fi && printenv > ${workspaceFolder}/.env",
       "problemMatcher": "$gcc",
       "presentation": {
         "reveal": "silent",

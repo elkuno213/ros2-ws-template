@@ -27,7 +27,7 @@ browser GUI access through noVNC, and repeatable `colcon` validation.
 ```bash
 git clone https://github.com/elkuno213/ros2-ws-template.git
 cd ros2-ws-template
-docker compose up -d --build --remove-orphans
+USER_UID=$(id -u) USER_GID=$(id -g) docker compose up -d --build --remove-orphans
 ```
 
 Open a shell in the ROS2 container:
@@ -133,6 +133,13 @@ source install/setup.zsh
 ros2 run example_cpp_pubsub temperature_publisher
 ```
 
+Launch after build:
+
+```bash
+source install/setup.zsh
+ros2 launch example_cpp_pubsub temperature_publisher.launch.py
+```
+
 ### `example_py_pubsub`
 
 Python package:
@@ -148,6 +155,13 @@ Run after build:
 ```bash
 source install/setup.zsh
 ros2 run example_py_pubsub temperature_subscriber
+```
+
+Launch after build:
+
+```bash
+source install/setup.zsh
+ros2 launch example_py_pubsub temperature_subscriber.launch.py
 ```
 
 ## Tooling

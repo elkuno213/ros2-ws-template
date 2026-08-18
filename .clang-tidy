@@ -1,52 +1,39 @@
+---
 Checks: >
   -*,
   bugprone-*,
+  clang-analyzer-*,
+  cppcoreguidelines-*,
   performance-*,
   modernize-*,
+  portability-*,
+  readability-*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -cppcoreguidelines-macro-usage,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  -cppcoreguidelines-pro-type-union-access,
+  -cppcoreguidelines-special-member-functions,
   -modernize-use-trailing-return-type,
-  readability-braces-around-statements,
-  readability-const-return-type,
-  readability-container-size-empty,
-  readability-duplicate-include,
-  readability-function-cognitive-complexity,
-  readability-identifier-naming,
-  readability-inconsistent-declaration-parameter-name,
-  readability-make-member-function-const,
-  readability-redundant-access-specifiers,
-  readability-redundant-control-flow,
-  readability-redundant-declaration,
-  readability-redundant-function-ptr-dereference,
-  readability-redundant-member-init,
-  readability-redundant-preprocessor,
-  readability-redundant-smartptr-get,
-  readability-redundant-string-cstr,
-  readability-redundant-string-init,
-  readability-simplify-boolean-expr,
-  readability-static-accessed-through-instance,
-  readability-static-definition-in-anonymous-namespace,
-  readability-string-compare,
-  readability-uniqueptr-delete-release
-WarningsAsErrors: ""
-HeaderFilterRegex: "^(src/example_cpp_pubsub|include/example_cpp_pubsub)/.*"
+  -portability-avoid-pragma-once,
+  -readability-function-cognitive-complexity,
+  -readability-identifier-length,
+  -readability-magic-numbers
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
 FormatStyle: file
 CheckOptions:
-  - key: readability-function-cognitive-complexity.Threshold
-    value: "20"
-  - key: readability-identifier-naming.NamespaceCase
-    value: lower_case
-  - key: readability-identifier-naming.ClassCase
-    value: CamelCase
-  - key: readability-identifier-naming.StructCase
-    value: CamelCase
-  - key: readability-identifier-naming.FunctionCase
-    value: camelBack
-  - key: readability-identifier-naming.VariableCase
-    value: lower_case
-  - key: readability-identifier-naming.LocalConstantCase
-    value: lower_case
-  - key: readability-identifier-naming.PrivateMemberPrefix
-    value: _
-  - key: readability-identifier-naming.ConstantPrefix
-    value: k
-  - key: readability-identifier-naming.ConstantCase
-    value: CamelCase
+  - key: readability-braces-around-statements.ShortStatementLines
+    value: '0'
+  - key: readability-implicit-bool-conversion.AllowIntegerConditions
+    value: 'false'
+  - key: readability-implicit-bool-conversion.AllowPointerConditions
+    value: 'false'
+  - key: modernize-use-nullptr.NullMacros
+    value: 'NULL'
+  - key: performance-for-range-copy.WarnOnAllAutoCopies
+    value: 'true'

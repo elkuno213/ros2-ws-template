@@ -2,11 +2,13 @@
 .github/
 .superpowers/
 .vscode/
-build/
-install/
+build*/
+install*/
 log/
 .venv/
+.ruff_cache/
 docs/
+tmp/
 frames_*
 *.debug.py
 *__pycache__*
